@@ -7,8 +7,14 @@ services:
       context: node  
     image: joaocsv/node-app
     networks:
+      - dbnet
       - appnet
     tty: true
+    environment:
+      - MYSQL_HOST=app-db-mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=app
 
   proxy:
     container_name: app-proxy
@@ -19,7 +25,22 @@ services:
       - appnet
     ports:
       - 8080:80
-
+  
+  db-mysql:
+    container_name: app-db-mysql
+    build:
+      context: mysql
+    image: joaocsv/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    networks:
+      - dbnet
+    
 networks:
   appnet:
+    driver: bridge
+  dbnet:
     driver: bridge
