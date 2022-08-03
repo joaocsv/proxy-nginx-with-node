@@ -10,6 +10,16 @@ services:
       - appnet
     tty: true
 
+  proxy:
+    container_name: app-proxy
+    build: 
+      context: nginx
+    image: joaocsv/nginx-app-proxy
+    networks:
+      - appnet
+    ports:
+      - 8080:80
+
 networks:
   appnet:
     driver: bridge
