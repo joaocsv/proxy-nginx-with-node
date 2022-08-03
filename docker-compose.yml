@@ -3,18 +3,20 @@ version: '3'
 services:
   app:
     container_name: app
-    build:
-      context: node  
-    image: joaocsv/node-app
+    image: node:16
+    working_dir: /var/www/html/
+    command: bash -c "npm install && node index.js"
+    tty: true
     networks:
       - dbnet
       - appnet
-    tty: true
     environment:
       - MYSQL_HOST=app-db-mysql
       - MYSQL_USER=root
       - MYSQL_PASSWORD=root
       - MYSQL_DATABASE=app
+    volumes:
+      - ./node/:/var/www/html/
 
   proxy:
     container_name: app-proxy
